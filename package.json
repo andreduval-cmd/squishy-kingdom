@@ -1,0 +1,14 @@
+{
+  "name": "squishy-kingdom",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test test/*.test.js",
+    "test:browser": "node test/browser.js"
+  },
+  "engines": { "node": ">=22" },
+  "dependencies": { "ws": "^8.18.3" },
+  "devDependencies": { "playwright": "^1.56.1" }
+}
