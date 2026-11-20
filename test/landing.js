@@ -12,12 +12,13 @@ try {
   assert.equal(await page.locator('h1').first().innerText(),'Small world.\nBig soft spot.');
   await page.screenshot({path:'test-results/landing-desktop.png'});
   const travel=await page.evaluate(()=>document.getElementById('lp-story').offsetHeight-document.getElementById('lp-visual').offsetHeight);
-  await page.mouse.move(1100,550);await page.mouse.wheel(0,travel*.51);await page.waitForFunction(()=>KingdomLanding.activeChapter===1);
+  async function wheelTo(target){await page.mouse.move(1100,550);const current=await page.evaluate(()=>KingdomLanding.progress);await page.mouse.wheel(0,travel*(target-current));await page.waitForFunction(t=>Math.abs(KingdomLanding.progress-t)<.005,target);}
+  await wheelTo(.51);await page.waitForFunction(()=>KingdomLanding.activeChapter===1);
   await page.locator('#lp-squish-demo').click();await page.waitForFunction(()=>KingdomLanding.diagnostics.squash>.08);
   await page.screenshot({path:'test-results/landing-discover.png'});
-  await page.mouse.move(1100,550);await page.mouse.wheel(0,travel*.38);await page.waitForFunction(()=>KingdomLanding.activeChapter===2);
+  await wheelTo(.89);await page.waitForFunction(()=>KingdomLanding.activeChapter===2);
   await page.screenshot({path:'test-results/landing-together.png'});
-  await page.mouse.wheel(0,-travel*.6);await page.waitForFunction(()=>KingdomLanding.activeChapter===-1);
+  await wheelTo(.30);await page.waitForFunction(()=>KingdomLanding.activeChapter===-1);
   await page.locator('.lp-skip').click();await page.waitForFunction(()=>document.getElementById('lp-features').getBoundingClientRect().top<150);
   assert.ok(await page.locator('.lp-nav').evaluate(el=>Math.abs(el.getBoundingClientRect().top)<2));
   await page.screenshot({path:'test-results/landing-features.png'});
