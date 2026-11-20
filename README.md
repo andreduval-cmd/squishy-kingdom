@@ -6,7 +6,7 @@ A fork of [smdbcba/squishy-kingdom](https://github.com/smdbcba/squishy-kingdom),
 
 ## Premium interface
 
-The title screen and collection banner use original generated miniature-kingdom artwork. The game includes a responsive desktop room sidebar, mobile controls, local vector navigation icons, refined menus, theme-aware surfaces and reduced-motion support. World buildings, trees, paths and garden details are painted directly on canvas. Existing maps, collisions and save formats are preserved. Art direction and the exact generation prompt are recorded in `assets/ART-DIRECTION.md`.
+The collection banner and landing fallback use original generated miniature-kingdom artwork. The game includes a responsive desktop room sidebar, mobile controls, local vector navigation icons, refined menus, theme-aware surfaces and reduced-motion support. The main world uses the 3D renderer described below. Existing maps, collisions and save formats are preserved. Art direction and the exact generation prompt are recorded in `assets/ART-DIRECTION.md`.
 
 ## Plush 3D world
 
@@ -15,6 +15,12 @@ The main world uses locally bundled Three.js geometry: rounded cottages and towe
 Use **WASD / arrow keys** or the touch pad to walk, **E** or the door button to interact, and **hold Space, Squish me, or your character** to compress the plush body. Releasing it springs it back. Friends see live movement, appearance and squishing. The +/− controls adjust the camera zoom. Squishing the avatar is cosmetic; the existing cozy-corner coin rules are unchanged.
 
 `src/world3d.js` is the renderer source; `npm run build` updates the committed `scene3d.js` bundle. Runtime assets are served locally, without a Three.js CDN. Static scenery is merged by material, shared geometry is cached, pixel ratio is capped, and disconnected avatar labels are disposed. WebGL failure falls back to the earlier canvas world. Towers and battle scenes retain their existing minigame views.
+
+## Landing page
+
+The landing page follows the [GPT-6 Astra 10K Websites workflow](https://github.com/Barty-Bart/gpt-6-astra-10k-websites), using existing artwork and a continuous live 3D scroll story approved by the user. It includes portrait framing, native scrolling, persistent navigation, an accessible mobile menu, a skip link, reduced-motion composition and an artwork fallback. The preview renderer releases its context when play starts.
+
+Edit `landing-content.json` and the fallback HTML for copy. `landing-style.html` is the design tile; `assets/LANDING-PRODUCTION.md` records the visual story, provenance and the unavailable Higgsfield media.
 
 ## Play locally
 
@@ -58,13 +64,14 @@ GitHub Pages can serve solo play, but cannot run this Node server. The live depl
 npm test
 npx playwright install chromium
 npm run test:browser
+npm run test:landing
 ```
 
-For an installed Edge browser, set `BROWSER_CHANNEL=msedge` before the browser test. Server tests use real WebSocket clients. Browser tests exercise two players, movement, appearance updates, chat injection handling, reconnects, solo switching, private invites, mobile width and save reload. GitHub Actions runs both suites.
+For an installed Edge browser, set `BROWSER_CHANNEL=msedge` before the browser test. Server tests use real WebSocket clients. Browser tests exercise two players, movement, appearance updates, chat injection handling, reconnects, solo switching, private invites, mobile width and save reload. The landing suite covers scrolling, mobile navigation, game entry, reduced motion and WebGL failure. GitHub Actions runs all suites.
 
 ## Next milestones
 
-1. Select a persistent host and configure HTTPS, operational logging and abuse handling.
+1. Expand operational logging and abuse handling on the Railway deployment.
 2. Add accounts and server-owned inventories, then atomic player-to-player trading.
 3. Move battles, rewards and progression validation to the server for co-op gameplay.
 4. Add reporting, blocking and moderation before opening public chat broadly.

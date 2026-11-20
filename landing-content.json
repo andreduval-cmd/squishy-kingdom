@@ -1,0 +1,22 @@
+{
+  "brand": "Squishy Kingdom",
+  "eyebrow": "A cozy little multiplayer world",
+  "hero": {"heading": "Small world.", "accent": "Big soft spot.", "body": "Collect little wonders. Find your people. Leave a little room for play.", "action": "Enter the kingdom"},
+  "chapters": [
+    {"number":"01", "label":"A softer place to land", "heading":"Come as you are.", "body":"A tiny village, a winding path, and a whole lot of squishy possibility. Take your first little step."},
+    {"number":"02", "label":"Little things. Lovely discoveries.", "heading":"Find your kind\nof squishy.", "body":"Open a box, meet a new favorite, and grow a collection that feels like you. Every squeeze has a little spring in it."},
+    {"number":"03", "label":"Better with a little company", "heading":"Your happy place,\nshared.", "body":"Meet in a public room or send a private invite. Wander together, say hello, and make a little space for each other."}
+  ],
+  "features": [
+    {"number":"01", "title":"Soft by nature.", "body":"Plush characters, springy steps, and a satisfying little squish. Hold Space, or use the Squish me button."},
+    {"number":"02", "title":"A world to wander.", "body":"Follow the paths through the village, visit the shops, and explore the gardens, woods, and shore."},
+    {"number":"03", "title":"A room for your people.", "body":"Join a public world or create an invite-only room. Your friends can see your avatar move and squish in real time."}
+  ],
+  "closing": {"eyebrow":"There is a little wonder waiting for you", "heading":"Make yourself\na little happier.", "body":"Your next cozy adventure is one small click away."},
+  "faq": [
+    {"question":"Do I need to download anything?", "answer":"No app installation is needed. Open the game in a browser and choose a public room, a friends room, or a solo adventure."},
+    {"question":"Can I play with friends?", "answer":"Yes. Create a friends room and share its invite link or room code. Live movement, avatars, squishing, and room chat are shared."},
+    {"question":"How is my progress saved?", "answer":"Your collection and coins are saved in this browser. Keep a copy of your save code to move progress to another device. Accounts and cloud saves are not available yet."},
+    {"question":"What can I do in the kingdom?", "answer":"Collect squishies, explore the 3D world, visit NPC traders, follow quests, and play tower and battle minigames. Those minigames use their existing views; collections and progression run locally."}
+  ]
+}
