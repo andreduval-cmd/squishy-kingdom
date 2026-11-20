@@ -58,20 +58,26 @@ function plush(appearance={},color='#efb4cf') {
   if(kind===7){[-1,1].forEach(s=>ball(body,color,s*.52,.83,0,.43,.4,.5,true));}
   const eyeY=kind===3?1.4:.97;
   [-1,1].forEach(s=>{
-    ball(body,'#382c42',s*.245,eyeY,front,.075,.095,.045);
-    ball(body,'#fffdf2',s*.245-.02,eyeY+.03,front+.04,.022);
+    if(appearance.e===1){const eyeCurve=new T.QuadraticBezierCurve3(new T.Vector3(s*.245-.07,eyeY,front+.04),new T.Vector3(s*.245,eyeY+.11,front+.07),new T.Vector3(s*.245+.07,eyeY,front+.04));mesh(body,new T.TubeGeometry(eyeCurve,8,.024,5,false),'#382c42');}
+    else {ball(body,'#382c42',s*.245,eyeY,front,appearance.e===2?.105:.075,appearance.e===2?.12:.095,.045);ball(body,'#fffdf2',s*.245-.02,eyeY+.03,front+.04,appearance.e===2?.038:.022);if(appearance.e===2)ball(body,'#fffdf2',s*.245+.04,eyeY-.035,front+.04,.018);}
     if(!appearance.n)ball(body,'#ed9eb2',s*.405,.76,front-.015,.115,.057,.027);
     const foot=ball(body,color,s*.38,.18,.23,.23,.17,.3,true);foot.userData.foot=s;
     const arm=ball(body,color,s*.69,.59,.01,.18,.31,.22,true);arm.rotation.z=s*-.38;
   });
-  const curve=new T.QuadraticBezierCurve3(new T.Vector3(-.12,.78,front+.05),new T.Vector3(0,.64,front+.12),new T.Vector3(.12,.78,front+.05));
-  mesh(body,new T.TubeGeometry(curve,12,.022,5,false),'#5b3b53');
+  if(appearance.m===2)ball(body,'#5b3b53',0,.74,front+.07,.075,.095,.025);
+  else if(appearance.m===1){for(const s of [-1,1]){const curve=new T.QuadraticBezierCurve3(new T.Vector3(0,.78,front+.06),new T.Vector3(s*.06,.65,front+.1),new T.Vector3(s*.14,.78,front+.05));mesh(body,new T.TubeGeometry(curve,8,.022,5,false),'#5b3b53');}}
+  else {const curve=new T.QuadraticBezierCurve3(new T.Vector3(-.12,.78,front+.05),new T.Vector3(0,.64,front+.12),new T.Vector3(.12,.78,front+.05));mesh(body,new T.TubeGeometry(curve,12,.022,5,false),'#5b3b53');}
   if(appearance.a===3||appearance.h===5){
     mesh(body,cylinder,'#d8b66c',0,1.91,0,.33,.12,.33);
     for(let i=0;i<5;i++){const a=i*Math.PI*2/5;mesh(body,cone,'#e5c67b',Math.sin(a)*.26,2.08,Math.cos(a)*.26,.12,.3,.12);}
     ball(body,'#d384b0',0,1.98,.3,.07);
   } else if(appearance.a===2||appearance.h===4){mesh(body,cylinder,'#6e5174',0,1.75,0,.44,.08,.44);mesh(body,cylinder,'#8d6a9d',0,1.97,0,.29,.44,.29);}
   else if(appearance.h||appearance.a===1){[-1,1].forEach(s=>{const bow=ball(body,'#bc7295',s*.15,1.63,.3,.2,.12,.08);bow.rotation.z=s*.3;});ball(body,'#d496ac',0,1.63,.36,.09);}
+  if(appearance.a===4){mesh(body,new T.TorusGeometry(.77,.055,6,24,Math.PI),'#66506e',0,1.02,0);for(const s of [-1,1]){ball(body,'#66506e',s*.76,1.04,0,.14,.24,.25);ball(body,'#d8a3c0',s*.8,1.04,.08,.1,.19,.2);}}
+  if(appearance.a===5){for(const s of [-1,1])mesh(body,new T.TorusGeometry(.16,.023,6,20),'#66506e',s*.245,eyeY,front+.07);box(body,'#66506e',0,eyeY,front+.08,.18,.025,.025,.006);}
+  if(appearance.t===1){for(let i=0;i<6;i++)ball(body,'#fff0e2',Math.sin(i*2.4)*.45,.38+(i%3)*.09,front-.015,.06,.045,.023);}
+  if(appearance.t===2){for(let i=0;i<2;i++)box(body,'#fff0e2',0,.38+i*.11,front-.02,.6,.045,.025,.01);}
+  if(appearance.g||appearance.t===3){for(let i=0;i<5;i++){const s=mesh(body,star,'#fff6d9',Math.sin(i*2.7)*.47,.43+(i%3)*.11,front+.01,.045,.045,.02);s.rotation.z=i;}}
   // Small seams catch the light, rather than making the plush look like hard plastic.
   core.userData.plush=true;outer.userData={body,spring:0,velocity:0,lastX:null,lastZ:null,signature:JSON.stringify(appearance),moving:false};
   return outer;
@@ -85,7 +91,7 @@ function actor(id,appearance,name,color) {
 }
 function removeActor(id){const a=actors.get(id);if(!a)return;scene.remove(a);a.userData.tag.material.map.dispose();a.userData.tag.material.dispose();if(a.userData.chat){a.userData.chat.material.map.dispose();a.userData.chat.material.dispose();}a.traverse(o=>{if(o.isMesh&&!geometryHas(o.geometry)&&o.geometry!==sphere&&o.geometry!==cylinder&&o.geometry!==cone&&o.geometry!==star)o.geometry.dispose();});actors.delete(id);}
 function geometryHas(g){for(const value of geometry.values())if(value===g)return true;return false;}
-function colors(a){const c=data.colors[a.c];return c?.startsWith('#')?c:a.c===29?'#a28bc7':'#e9b9d5';}
+function colors(a){if(a.b===2)return `hsl(${data.hues[a.s]??350},65%,78%)`;const c=data.colors[a.c];return c?.startsWith('#')?c:a.c===29?'#a28bc7':'#e9b9d5';}
 function updateActor(a,x,z,moving,squeeze,dt,time) {
   const d=a.userData,body=d.body;
   if(d.interpolate&&d.lastX!=null){const blend=1-Math.exp(-dt*14);x=a.position.x+(x-a.position.x)*blend;z=a.position.z+(z-a.position.z)*blend;}
@@ -293,6 +299,7 @@ function render(d) {
     if(a.userData.chat)a.userData.chat.visible=(p.until||0)>performance.now();
   });
   d.npcs.forEach((p,i)=>{const id='npc:'+i;present.add(id);const a=actor(id,{p:[3,0,4][i],h:[1,4,4][i]},['Granny Gumdrop','Cowboy Cooper','Wizard Wobble'][i],['#e5c5ae','#c8d7b5','#bdb0db'][i]);updateActor(a,p.x/U,p.y/U,true,false,dt,now+i);});
+  d.markets.forEach((p,i)=>{const id='merchant:'+i;present.add(id);const a=actor(id,{p:[1,3,2][i],a:[5,1,0][i]},p.n,['#cbb0df','#e1b4c9','#c4c5b2'][i]);updateActor(a,p.x/U,(p.y-14)/U,false,false,dt,now+i);a.scale.setScalar(.7);a.userData.tag.visible=false;});
   const princess=actor('prism',{p:8,a:3},'Princess Prism','#c4abe5');present.add('prism');updateActor(princess,d.prism.x/U,d.prism.y/U,false,false,dt,now);
   if(d.follower){const f=actor('follower',{p:9},'Mochi','#edb7cc');present.add('follower');updateActor(f,d.follower.x/U,d.follower.y/U,d.moving,false,dt,now+.5);f.scale.setScalar(.62);}
   const enemies=d.blobs.concat(d.guards.filter(g=>d.quest===1&&!g.dead&&!((d.shardMask>>g.si)&1)));

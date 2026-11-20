@@ -4244,7 +4244,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         canPlay: () => tab === 'world' && !A && !busy && !DLG && !KG.on && $('start').hidden,
         squishSound: () => { unlock(); if (!muted) sqSnd(S[owned[0]?.s || 0]); },
         read: () => ({ buildings: BLD, trees: TREES, hedges: HEDGE, gates: GATE, markets: MK, portal: KDR,
-          cozy: CZ, dock: DOCK, island: ISL, chest: CHEST, shards: SHD, colors: COL,
+          cozy: CZ, dock: DOCK, island: ISL, chest: CHEST, shards: SHD, colors: COL, hues: HU,
           player: WS.p, avatar: av, playerName, moving: !!WS.mv, peers: LB.p, npcs: WS.npc, prism: WS.pz,
           follower: mfOn() ? MF : null, blobs: GB.b, guards: GDS, quest: QS, shardMask: QM, league,
           boat: BT.on, canPlay: kingdom3DBridge.canPlay() })
