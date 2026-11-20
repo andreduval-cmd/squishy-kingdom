@@ -8,6 +8,14 @@ A fork of [smdbcba/squishy-kingdom](https://github.com/smdbcba/squishy-kingdom),
 
 The title screen and collection banner use original generated miniature-kingdom artwork. The game includes a responsive desktop room sidebar, mobile controls, local vector navigation icons, refined menus, theme-aware surfaces and reduced-motion support. World buildings, trees, paths and garden details are painted directly on canvas. Existing maps, collisions and save formats are preserved. Art direction and the exact generation prompt are recorded in `assets/ART-DIRECTION.md`.
 
+## Plush 3D world
+
+The main world uses locally bundled Three.js geometry: rounded cottages and towers, arched roofs, lit windows, gardens, trees, a shoreline, a boat and Shell Island. Characters are real 3D plush models with eyes, smiles, ears, feet, hats and avatar colors. A damped camera follows the player; movement eases in and out, with a soft bouncing walk cycle.
+
+Use **WASD / arrow keys** or the touch pad to walk, **E** or the door button to interact, and **hold Space, Squish me, or your character** to compress the plush body. Releasing it springs it back. Friends see live movement, appearance and squishing. The +/− controls adjust the camera zoom. Squishing the avatar is cosmetic; the existing cozy-corner coin rules are unchanged.
+
+`src/world3d.js` is the renderer source; `npm run build` updates the committed `scene3d.js` bundle. Runtime assets are served locally, without a Three.js CDN. Static scenery is merged by material, shared geometry is cached, pixel ratio is capped, and disconnected avatar labels are disposed. WebGL failure falls back to the earlier canvas world. Towers and battle scenes retain their existing minigame views.
+
 ## Play locally
 
 Install Node.js 22 or newer, then run:

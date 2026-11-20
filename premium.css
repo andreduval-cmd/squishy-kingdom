@@ -163,3 +163,17 @@ button:active:not(:disabled) { transform: translateY(2px); }
   #online-log { height: 38px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+
+/* The WebGL canvas replaces the map visually; legacy hit targets stay aligned. */
+#world3d { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.world-is-3d #wcv, .world-is-3d #lcv { opacity: 0; }
+#world3d-controls { position: absolute; right: 14px; bottom: 14px; z-index: 3; display: flex; align-items: flex-end; gap: 6px; flex-direction: column; }
+#world3d-controls > span { padding: 5px 9px; border-radius: 8px; background: #fffaf0cc; color: #716275; font: 500 8px/1.4 Geist,sans-serif; letter-spacing: 1.2px; }
+#world3d-controls > div { display: flex; gap: 5px; }
+#world3d-controls[hidden] { display: none; }
+#world3d-controls button { min-width: 36px; height: 37px; border: 1px solid #d1bdca; border-radius: 11px; background: #fffbf0ec; color: #6d506d; box-shadow: 0 3px 0 #aa98a540; font: 600 16px Geist,sans-serif; cursor: pointer; touch-action: none; }
+#world3d-controls #plush-squeeze { padding: 0 13px; background: #926b8c; color: #fff9ef; font-size: 11px; border-color: #7b5b79; }
+#world3d-controls #plush-squeeze[aria-pressed='true'] { background: #b180a4; transform: translateY(2px); box-shadow: none; }
+.world-is-3d .x-whint:not(.x-srvtag) { display: none; }
+.world-is-3d .x-whint.x-srvtag { top: 14px; max-width: 48%; }
+@media (max-width: 899px) { #world3d-controls { right: 9px; bottom: 10px; } #world3d-controls button { min-width: 32px; height: 35px; } #world3d-controls #plush-squeeze { padding: 0 9px; font-size: 10px; } }

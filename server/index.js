@@ -7,6 +7,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 const root = new URL('../', import.meta.url);
 const assets = new Map([['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']], ['/online.js', ['online.js', 'text/javascript']], ['/online.css', ['online.css', 'text/css']]]);
 for (const [path, type] of [['premium.css', 'text/css'], ['premium.js', 'text/javascript'], ['premium-world.js', 'text/javascript'], ['assets/kingdom-dawn.png', 'image/png']]) assets.set('/' + path, [path, type]);
+assets.set('/scene3d.js', ['scene3d.js', 'text/javascript']);
 const clean = (v, max) => typeof v === 'string' ? v.replace(/[\p{Cc}\p{Cf}]/gu, '').trim().slice(0, max) : '';
 const integer = (v, max) => Number.isInteger(v) && v >= 0 && v <= max ? v : 0;
 const avatarMax = { f: 5, h: 5, c: 43, b: 2, g: 1, s: 85, p: 9, e: 2, m: 2, n: 1, a: 5, t: 3 };
@@ -79,6 +80,7 @@ export function createGameServer({ maxPlayers = 24, roomTTL = 600000 } = {}) {
         ws.player.y = Math.max(14, Math.min(1546, msg.y));
         ws.player.scene = msg.scene === 'world' ? 'world' : 'inside';
         ws.player.moving = msg.moving === true;
+        ws.player.squish = msg.squish === true;
         const source = msg.avatar && typeof msg.avatar === 'object' ? msg.avatar : {};
         ws.player.avatar = Object.fromEntries(Object.entries(avatarMax).map(([key, max]) => [key, integer(source[key], max)]));
       } else if (msg.type === 'chat' && ws.room) {

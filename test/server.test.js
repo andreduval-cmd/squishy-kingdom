@@ -41,9 +41,10 @@ test('two real peers share presence, validated movement, chat and departure', as
   joined = b.next(m => m.type === 'joined'); b.send({ type: 'join', mode: 'public', name: 'Bob' }); await joined;
   let snap = b.next(m => m.type === 'snapshot' && m.players.length === 2); await snap;
   snap = b.next(m => m.type === 'snapshot' && m.players.some(p => p.id === alice.id && p.x === 500));
-  a.send({ type: 'state', x: 500, y: -100, avatar: { c: 43, p: 9999, n: 'bad' }, scene: 'world', moving: true });
+  a.send({ type: 'state', x: 500, y: -100, avatar: { c: 43, p: 9999, n: 'bad' }, scene: 'world', moving: true, squish: true });
   const player = (await snap).players.find(p => p.id === alice.id);
   assert.equal(player.y, 14); assert.equal(player.avatar.c, 43); assert.equal(player.avatar.p, 0); assert.equal(player.avatar.n, 0);
+  assert.equal(player.squish,true);
   const chat = b.next(m => m.type === 'chat'); a.send({ type: 'chat', text: 'Hi Bob!' }); assert.equal((await chat).text, 'Hi Bob!');
   const limited = a.next(m => m.type === 'error'); a.send({ type: 'chat', text: 'too fast' }); assert.match((await limited).message, /wait/);
   const left = b.next(m => m.type === 'left'); a.ws.close(); assert.equal((await left).id, alice.id);

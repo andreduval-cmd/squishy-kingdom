@@ -1118,7 +1118,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <section class="x-world" id="world" aria-label="World map" hidden>
           <div class="x-stage" id="wstage">
             <p class="x-whint">⬆️⬇️⬅️➡️ Walk · 🚪 Go in</p>
-            <canvas id="wcv" role="img" aria-label="Top-down map of Squishy World with your avatar, Whisper Woods and its hedge maze to the east, and the sea with Shell Island at the bottom"></canvas>
+            <canvas id="wcv" role="img" aria-label="Squishy World controls: move with arrow keys or WASD, hold Space to squish, and use E at a door"></canvas>
             <canvas id="lcv" aria-hidden="true"></canvas>
             <div class="x-vig" id="vig" aria-hidden="true"></div>
             <button class="x-me" id="me" aria-label="Edit my avatar"><canvas id="mecv" width="120" height="120" aria-hidden="true"></canvas><span>Me</span></button>
@@ -3337,9 +3337,20 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         const k = WS.k, p = WS.p, sol = solids();
         let dx = (k.r ? 1 : 0) - (k.l ? 1 : 0), dy = (k.d ? 1 : 0) - (k.u ? 1 : 0);
         const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; }
+        if (window.Squishy3D?.ready) {
+          const angle = Math.atan2(7.2, 21.7), vx = dx * Math.cos(angle) + dy * Math.sin(angle);
+          dy = dy * Math.cos(angle) - dx * Math.sin(angle); dx = vx;
+        }
         const sp = BT.on ? 2.6 : 3; if (BT.on && dx) BT.f = dx > 0 ? 1 : -1;
-        WS.t++; wmove(p, dx * sp, 0, sol); wmove(p, 0, dy * sp, sol); seaStep();
-        WS.mv = m > 0.1; if (WS.mv) { p.ph += 0.25; if (WS.t % 13 === 0 && !BT.on) snd("step"); }
+        // Gentle acceleration and braking keep the plush body feeling soft.
+        const sq = window.Squishy3D?.held;
+        WS.vx = (WS.vx || 0) + ((sq ? 0 : dx * sp) - (WS.vx || 0)) * .28;
+        WS.vy = (WS.vy || 0) + ((sq ? 0 : dy * sp) - (WS.vy || 0)) * .28;
+        if (Math.abs(WS.vx) < .015) WS.vx = 0;
+        if (Math.abs(WS.vy) < .015) WS.vy = 0;
+        const oldX = p.x, oldY = p.y;
+        WS.t++; wmove(p, WS.vx, 0, sol); wmove(p, 0, WS.vy, sol); seaStep();
+        WS.mv = Math.hypot(p.x - oldX, p.y - oldY) > .03; if (WS.mv) { p.ph += 0.25; if (WS.t % 13 === 0 && !BT.on) snd("step"); }
         mfStep(p);
         if (gbStep(p)) return;
         WS.npc.forEach((n) => {
@@ -3367,6 +3378,9 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         WS.k = {}; WS.j = null; n.go();
       }
       function wdraw() {
+        if (window.Squishy3D && window.kingdom3DBridge && Squishy3D.render(kingdom3DBridge.read())) {
+          WS.cam = [0, 0, 1]; return;
+        }
         const r = devicePixelRatio || 1, st = $("wstage");
         if (wcv.width !== Math.round(st.clientWidth * r) || wcv.height !== Math.round(st.clientHeight * r)) { wcv.width = Math.round(st.clientWidth * r); wcv.height = Math.round(st.clientHeight * r); }
         const cw = wcv.width, ch = wcv.height, sc = cw / (cw / (devicePixelRatio || 1) > 700 ? 640 : 380), vw = cw / sc, vh = ch / sc, p = WS.p, c = wg, t = WS.t;
@@ -3874,7 +3888,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           AZ.idle += dt;
           if (AZ.idle >= 5000) {
             AZ.idle -= 5000; AZ.got++; coins += 1; renderTop(); AZ.s = -1;
-            if (WS.cam) { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam; float(w.left + (p.x - cx) * s, w.top + (p.y - cy) * s - 24, "+1 💤"); }
+            if (WS.cam) { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam; const pp = window.Squishy3D?.ready ? Squishy3D.project(p.x, p.y, 1) : { x: w.left + (p.x - cx) * s, y: w.top + (p.y - cy) * s - 24 }; float(pp.x, pp.y, "+1 💤"); }
           }
         }
         const sec = Math.floor(AZ.t / 1000);
@@ -3896,7 +3910,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         if (!muted && actx && actx.state === "running" && now - sqzSnd > 220) { sqzSnd = now; const t = actx.currentTime, o = fbus(); z.k === "butter" ? butterSq(t, 1.3, o) : (dough(t, 1.3, o), puffB(t + .5, .9, o)); }
         if (now - sqzLast < 1000) return;
         sqzLast = now; coins += 1; renderTop();
-        if (WS.cam) { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam; float(w.left + (z.x + z.w / 2 - cx) * s, w.top + (z.y + z.h / 2 - cy) * s - 30, "+1 🪙"); }
+        if (WS.cam) { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam; const pp = window.Squishy3D?.ready ? Squishy3D.project(z.x + z.w / 2, z.y + z.h / 2, 1) : { x: w.left + (z.x + z.w / 2 - cx) * s, y: w.top + (z.y + z.h / 2 - cy) * s - 30 }; float(pp.x, pp.y, "+1 🪙"); }
       }
       function sqzStop() { clearInterval(sqzI); sqzI = 0; $("sqz").classList.remove("on"); }
       const sqzB = $("sqz");
@@ -3906,7 +3920,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       sqzB.addEventListener("click", (e) => { if (!e.detail) squish(); }); // keyboard
       wcv.addEventListener("pointerdown", (e) => { // tap the object itself
         const z = AZ.z; if (!z || !canSq(z) || !WS.cam) return;
-        const r = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam, x = cx + (e.clientX - r.left) / s, y = cy + (e.clientY - r.top) / s;
+        const r = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam, wp = window.Squishy3D?.ready ? Squishy3D.unproject(e.clientX, e.clientY) : { x: cx + (e.clientX - r.left) / s, y: cy + (e.clientY - r.top) / s }; if (!wp) return; const { x, y } = wp;
         if (Math.hypot(x - (z.x + z.w / 2), y - (z.y + z.h / 2 + 12)) < 50) { unlock(); squish(); }
       });
       // Cozy Corner choice buttons: switch scene + ambient instantly, remember the pick
@@ -3933,7 +3947,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         tutd = 1; try { localStorage.sqTut = 1; } catch (e) {}
         busy = true; WS.k = {};
         const app = $("app"), ar = () => app.getBoundingClientRect(), el = (q) => () => document.querySelector(q).getBoundingClientRect();
-        const door = () => { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam, x = w.left + (400 - cx) * s, y = w.top + (430 - cy) * s; return { left: x, right: x, top: y, bottom: y }; };
+        const door = () => { const w = wcv.getBoundingClientRect(), [cx, cy, s] = WS.cam, x = w.left + (400 - cx) * s, y = w.top + (430 - cy) * s; const pp = window.Squishy3D?.ready ? Squishy3D.project(400, 430, 1) : { x, y }; return { left: pp.x, right: pp.x, top: pp.y, bottom: pp.y }; };
         const ST = [["Tap arrows to walk", el("#wpad")], ["Walk into doors", door], ["Squeeze squishies", el('[data-tab="home"]')], ["Open boxes!", el('[data-tab="boxes"]')]];
         const o = document.createElement("div"); o.className = "x-tut"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "How to play");
         o.innerHTML = `<div class="x-mbox"><span>🍡</span><b id="tcap"></b><small id="tdot"></small></div><div class="x-hand bob" id="thand"><i></i></div>`;
@@ -3957,7 +3971,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         if (WK[key]) { e.preventDefault(); WS.k[WK[key]] = ev === "keydown"; }
         else if (key === "e" && ev === "keydown") useNear();
       }));
-      addEventListener("blur", () => (WS.k = {}));
+      addEventListener("blur", () => { WS.k = {}; WS.vx = WS.vy = 0; });
 
       $("aexit").addEventListener("click", exitTower);
       const setMute = (v) => { muted = v; ["mute", "amute"].forEach((id) => { const b = $(id); b.textContent = v ? "🔇" : "🔊"; b.setAttribute("aria-pressed", v); b.setAttribute("aria-label", v ? "Unmute sounds" : "Mute sounds"); }); };
@@ -4097,12 +4111,12 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       const lcv = $('lcv'), lgx = lcv.getContext('2d');
       const LB = { on: false, last: 0, p: [] };
       const ONLINE = new SquishyOnline({
-        state: () => ({ x: WS.p.x, y: WS.p.y, avatar: av, moving: Object.values(WS.k).some(Boolean), scene: tab === 'world' && !A && !document.hidden ? 'world' : 'inside' }),
+        state: () => ({ x: WS.p.x, y: WS.p.y, avatar: av, moving: !!WS.mv, squish: !!window.Squishy3D?.held && !busy && !A && tab === 'world', scene: tab === 'world' && !A && !document.hidden ? 'world' : 'inside' }),
         players: peers => {
           const old = new Map(LB.p.map(p => [p.id, p]));
           LB.p = peers.map(p => {
             const prev = old.get(p.id);
-            return { ...p.avatar, s: S[p.avatar.s] ? p.avatar.s : 0, id: p.id, label: p.name, scene: p.scene, moving: p.moving,
+            return { ...p.avatar, s: S[p.avatar.s] ? p.avatar.s : 0, id: p.id, label: p.name, scene: p.scene, moving: p.moving, squish: p.squish,
               x: prev?.x ?? p.x, y: prev?.y ?? p.y, tx: p.x, ty: p.y, ph: prev?.ph || 0, say: prev?.say || '', until: prev?.until || 0 };
           });
         },
@@ -4117,7 +4131,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         if (lcv.width !== cw || lcv.height !== ch) { lcv.width = cw; lcv.height = ch; }
         const dt = LB.last ? Math.min(100, ts - LB.last) : 16; LB.last = ts;
         c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cw, ch);
-        if (srv === 'solo' || A || !cw || !ch) return;
+        if (window.Squishy3D?.ready || srv === 'solo' || A || !cw || !ch) return;
         const sc = cw / (cw / (devicePixelRatio || 1) > 700 ? 640 : 380), vw = cw / sc, vh = ch / sc, p = WS.p;
         const cx = Math.max(0, Math.min(WMW - vw, p.x - vw / 2)), cy = vh >= WMH ? (WMH - vh) / 2 : Math.max(0, Math.min(WMH - vh, p.y - vh / 2));
         c.setTransform(sc, 0, 0, sc, -cx * sc, -cy * sc); c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -4224,7 +4238,19 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         const sv = store && localStorage.getItem(SK);
         if (sv) { applyCode(sv); render(); $("go").textContent = "▶️ Continue!"; toast("Welcome back! Your game was loaded 💕"); }
       } catch (e) {}
+
+      // A narrow bridge lets the 3D renderer consume live state without owning game rules.
+      window.kingdom3DBridge = {
+        canPlay: () => tab === 'world' && !A && !busy && !DLG && !KG.on && $('start').hidden,
+        squishSound: () => { unlock(); if (!muted) sqSnd(S[owned[0]?.s || 0]); },
+        read: () => ({ buildings: BLD, trees: TREES, hedges: HEDGE, gates: GATE, markets: MK, portal: KDR,
+          cozy: CZ, dock: DOCK, island: ISL, chest: CHEST, shards: SHD, colors: COL,
+          player: WS.p, avatar: av, playerName, moving: !!WS.mv, peers: LB.p, npcs: WS.npc, prism: WS.pz,
+          follower: mfOn() ? MF : null, blobs: GB.b, guards: GDS, quest: QS, shardMask: QM, league,
+          boat: BT.on, canPlay: kingdom3DBridge.canPlay() })
+      };
     </script>
     <script src="premium.js"></script>
+    <script src="scene3d.js"></script>
   </body>
 </html>

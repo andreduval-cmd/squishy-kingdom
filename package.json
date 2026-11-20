@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "esbuild src/world3d.js --bundle --minify --format=iife --target=es2022 --outfile=scene3d.js",
     "start": "node server/index.js",
     "test": "node --test test/*.test.js",
     "test:browser": "node test/browser.js"
@@ -15,7 +16,9 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "playwright": "^1.56.1",
-    "railway": "^3.17.0"
+    "railway": "^3.17.0",
+    "three": "^0.187.0"
   }
 }
