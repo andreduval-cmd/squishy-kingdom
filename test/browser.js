@@ -22,8 +22,11 @@ try {
     }
     await page.evaluate(() => { looked = 1; ld = dayN(); hg = HD?.key || 0; showSrv(); });
   }
-  await a.locator('#online-name').fill('Alice'); await a.evaluate(() => enter('pub'));
-  await b.locator('#online-name').fill('Bob'); await b.evaluate(() => enter('pub'));
+  // Browser QA stays in an isolated invite room, including against the live host.
+  await a.locator('#online-name').fill('Alice'); await a.evaluate(() => enter('priv'));
+  await a.waitForFunction(() => ONLINE.connected && ONLINE.code);
+  const initialRoom = await a.evaluate(() => ONLINE.code);
+  await b.locator('#online-name').fill('Bob'); await b.evaluate(code => enter('priv',code),initialRoom);
   await a.waitForFunction(() => LB.p.some(p => p.label === 'Bob'));
   await b.waitForFunction(() => LB.p.some(p => p.label === 'Alice'));
   for(const page of [a,b]) await page.waitForFunction(() => window.Squishy3D?.ready && Squishy3D.diagnostics.frame > 2);
