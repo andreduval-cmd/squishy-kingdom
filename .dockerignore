@@ -1,0 +1,7 @@
+node_modules
+.git
+work
+test-results
+test
+*.zip
+1270*.html
