@@ -2,6 +2,10 @@
 
 A fork of [smdbcba/squishy-kingdom](https://github.com/smdbcba/squishy-kingdom), adding real multiplayer to the existing collecting and exploration game.
 
+## Premium interface
+
+The title screen and collection banner use original generated miniature-kingdom artwork. The game includes a responsive desktop room sidebar, mobile controls, local vector navigation icons, refined menus, theme-aware surfaces and reduced-motion support. World buildings, trees, paths and garden details are painted directly on canvas. Existing maps, collisions and save formats are preserved. Art direction and the exact generation prompt are recorded in `assets/ART-DIRECTION.md`.
+
 ## Play locally
 
 Install Node.js 22 or newer, then run:

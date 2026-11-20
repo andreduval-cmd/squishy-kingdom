@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createGameServer } from '../server/index.js';
 const game = createGameServer();
 await new Promise(resolve => game.server.listen(0, '127.0.0.1', resolve));
-const base = `http://127.0.0.1:${game.server.address().port}`;
+const base = process.env.TEST_BASE_URL || `http://127.0.0.1:${game.server.address().port}`;
 const browser = await chromium.launch({ headless: true, channel: process.env.BROWSER_CHANNEL || undefined });
 const errors = [];
 try {
@@ -13,7 +13,14 @@ try {
   for (const page of [a, b]) {
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(base); await page.waitForFunction(() => typeof ONLINE !== 'undefined');
-    await page.evaluate(() => { looked = 1; showSrv(); });
+    if (page === a) {
+      await page.screenshot({ path: 'test-results/title-desktop.png', fullPage: true });
+      await page.setViewportSize({ width:390, height:844 });
+      await page.screenshot({ path:'test-results/title-mobile.png', fullPage:true });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.setViewportSize({ width:1280, height:900 });
+    }
+    await page.evaluate(() => { looked = 1; ld = dayN(); hg = HD?.key || 0; showSrv(); });
   }
   await a.locator('#online-name').fill('Alice'); await a.evaluate(() => enter('pub'));
   await b.locator('#online-name').fill('Bob'); await b.evaluate(() => enter('pub'));
@@ -22,6 +29,8 @@ try {
   await a.evaluate(() => { WS.p.x = 450; av.c = 14; });
   await b.waitForFunction(() => LB.p.some(p => p.label === 'Alice' && p.tx === 450 && p.c === 14));
   await a.evaluate(() => setTab('home'));
+  assert.equal(await a.locator('#world').isVisible(), false);
+  await a.screenshot({ path:'test-results/collection-desktop.png', fullPage:true });
   await b.waitForFunction(() => LB.p.find(p => p.label === 'Alice')?.scene === 'inside');
   await a.evaluate(() => setTab('world'));
   await b.waitForFunction(() => LB.p.find(p => p.label === 'Alice')?.scene === 'world');
