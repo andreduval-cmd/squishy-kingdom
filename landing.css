@@ -9,7 +9,7 @@
 .lp h1,.lp h2,.lp h3,.lp p { margin:0; }
 .lp section[id],.lp div[id] { scroll-margin-top:90px; }
 .lp .lp-nav { position:sticky; top:0; z-index:12; display:flex; align-items:center; gap:24px; height:82px; padding:0 clamp(22px,4vw,62px); background:#f8f5ecf0; border-bottom:1px solid #dfd7dd80; backdrop-filter:blur(18px); }
-.lp-logo { display:inline-flex; align-items:center; gap:11px; font-size:15px; font-weight:600; letter-spacing:-.5px; white-space:nowrap; }
+.lp-logo { color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:11px; font-size:15px; font-weight:600; letter-spacing:-.5px; white-space:nowrap; }
 .lp-logo img { width:38px; height:38px; }
 .lp-nav-links { display:flex; gap:28px; margin-left:auto; align-items:center; font-size:11px; font-weight:500; }
 .lp-nav-links a { padding:12px 0; color:var(--lp-muted); }
@@ -91,7 +91,7 @@
 .lp-menu button[aria-label='Close menu'] { width:44px; height:44px; border:0; border-radius:50%; background:#ede2ea; color:#70536b; font-size:22px; cursor:pointer; }
 .lp-menu nav { display:grid; gap:0; margin:25px 0; }
 .lp-menu nav a { color:#614b61; text-decoration:none; font:400 28px Georgia,serif; padding:16px 0; border-bottom:1px solid #ddd0da; }
-.lp-style { margin:0; background:#f8f5ec; color:#3d3041; font-family:Geist,system-ui,sans-serif; }
+.lp-style { --lp-plum:#79566e; --lp-ink:#3d3041; --lp-muted:#776d78; --lp-line:#dcd2d8; margin:0; background:#f8f5ec; color:#3d3041; font-family:Geist,system-ui,sans-serif; }
 .lp-style main { max-width:1050px; margin:auto; padding:55px 30px; }
 .lp-style h1 { font:400 60px Georgia,serif; letter-spacing:-3px; margin:35px 0 15px; }
 .lp-style .swatches { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:35px 0; }
