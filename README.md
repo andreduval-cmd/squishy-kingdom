@@ -2,6 +2,8 @@
 
 A fork of [smdbcba/squishy-kingdom](https://github.com/smdbcba/squishy-kingdom), adding real multiplayer to the existing collecting and exploration game.
 
+**Play:** [Squishy Kingdom on Railway](https://squishy-kingdom-production.up.railway.app)
+
 ## Premium interface
 
 The title screen and collection banner use original generated miniature-kingdom artwork. The game includes a responsive desktop room sidebar, mobile controls, local vector navigation icons, refined menus, theme-aware surfaces and reduced-motion support. World buildings, trees, paths and garden details are painted directly on canvas. Existing maps, collisions and save formats are preserved. Art direction and the exact generation prompt are recorded in `assets/ART-DIRECTION.md`.
@@ -40,7 +42,7 @@ docker run --rm -p 3000:3000 -e PORT=3000 squishy-kingdom
 
 The same process serves the game and its WebSocket endpoint; no frontend URL editing or API keys are needed. `PORT` defaults to 3000; `HOST` defaults to `0.0.0.0`. Health endpoint: `/health`. The proxy must preserve the original `Host` header, or set `ALLOWED_ORIGINS` to the exact HTTPS origin (comma-separated for multiple origins). A single instance keeps rooms in memory; multiple replicas require a shared room service before scaling.
 
-GitHub Pages can serve solo play, but cannot run this Node server. The repository is not automatically deployed to a public multiplayer host. A persistent WebSocket-capable host is required.
+GitHub Pages can serve solo play, but cannot run this Node server. The live deployment runs on Railway from `feature/live-multiplayer`. `.railway/railway.ts` records the Docker builder, health check, branch and single-replica setup. Railway assigns the process port; the generated public domain routes to port 8080. Use the Railway CLI's `config plan` before `config apply` to review infrastructure changes. On Windows with a locally installed CLI, set the `_` environment variable to the absolute `railway.exe` path so the Railway TypeScript SDK can locate it.
 
 ## Verify
 
