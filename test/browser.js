@@ -86,11 +86,16 @@ try {
   await b.screenshot({ path: 'test-results/mobile.png', fullPage: true });
   assert.equal(await b.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await a.bringToFront(); await a.screenshot({ path: 'test-results/multiplayer.png', fullPage: true });
-  await a.reload(); await a.waitForFunction(() => typeof ONLINE !== 'undefined');
-  assert.ok((await a.locator('#go').textContent()).includes('Continue'));
+  console.log('3D interactions passed; checking saved progress in a fresh browser session.');
+  const restored = await browser.newContext({ storageState: await contexts[0].storageState() });
+  restored.setDefaultTimeout(45000);
+  const restoredPage = await restored.newPage(); await restoredPage.goto(base);
+  await restoredPage.waitForFunction(() => typeof ONLINE !== 'undefined');
+  assert.ok((await restoredPage.locator('#go').textContent()).includes('Continue'));
   assert.deepEqual(errors, []);
   console.log('PASS: independent browsers: 3D rendering, soft squish synchronization, collision/doors, presence, movement, avatars, scenes, safe chat, reconnect, solo, invites, mobile, save reload.');
 } catch(error) {
+  console.error(error.stack || error);
   for(let i=0;i<pages.length;i++) { try { await pages[i].screenshot({path:`test-results/failure-${i}.png`,timeout:10000}); } catch {} }
   throw error;
 } finally { await browser.close(); await game.close(); }

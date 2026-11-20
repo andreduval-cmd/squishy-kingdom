@@ -27,6 +27,7 @@ test('serves only game assets and health; denies arbitrary files and origins', a
   const { base } = await fixture(t);
   assert.equal((await fetch(base)).status, 200);
   assert.equal((await fetch(base + '/online.js')).status, 200);
+  assert.equal((await fetch(base + '/assets/geist-latin.woff2')).headers.get('content-type').split(';')[0], 'font/woff2');
   assert.deepEqual(await (await fetch(base + '/health')).json(), { ok: true });
   assert.equal((await fetch(base + '/server/index.js')).status, 404);
   assert.equal((await fetch(base + '/.git/config')).status, 404);

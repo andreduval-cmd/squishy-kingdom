@@ -8,6 +8,7 @@ const root = new URL('../', import.meta.url);
 const assets = new Map([['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']], ['/online.js', ['online.js', 'text/javascript']], ['/online.css', ['online.css', 'text/css']]]);
 for (const [path, type] of [['premium.css', 'text/css'], ['premium.js', 'text/javascript'], ['premium-world.js', 'text/javascript'], ['assets/kingdom-dawn.png', 'image/png']]) assets.set('/' + path, [path, type]);
 assets.set('/scene3d.js', ['scene3d.js', 'text/javascript']);
+assets.set('/assets/geist-latin.woff2', ['assets/geist-latin.woff2', 'font/woff2']);
 const clean = (v, max) => typeof v === 'string' ? v.replace(/[\p{Cc}\p{Cf}]/gu, '').trim().slice(0, max) : '';
 const integer = (v, max) => Number.isInteger(v) && v >= 0 && v <= max ? v : 0;
 const avatarMax = { f: 5, h: 5, c: 43, b: 2, g: 1, s: 85, p: 9, e: 2, m: 2, n: 1, a: 5, t: 3 };
