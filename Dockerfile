@@ -3,7 +3,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY index.html online.js online.css premium.js premium.css premium-world.js scene3d.js ./
-COPY landing.css landing.js landing-content.json landing-style.html ./
 COPY assets/ ./assets/
 COPY server/ ./server/
 USER node

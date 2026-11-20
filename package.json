@@ -7,8 +7,7 @@
     "build": "esbuild src/world3d.js --bundle --minify --format=iife --target=es2022 --outfile=scene3d.js",
     "start": "node server/index.js",
     "test": "node --test test/*.test.js",
-    "test:browser": "node test/browser.js",
-    "test:landing": "node test/landing.js"
+    "test:browser": "node test/browser.js"
   },
   "engines": {
     "node": ">=22"

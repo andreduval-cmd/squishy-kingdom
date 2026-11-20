@@ -1084,7 +1084,6 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
     </style>
       <link rel="stylesheet" href="online.css" />
       <link rel="stylesheet" href="premium.css" />
-      <link rel="stylesheet" href="landing.css" />
       <link rel="preload" as="image" href="assets/kingdom-dawn.png" />
   </head>
   <body>
@@ -1141,55 +1140,16 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           <form class="x-ask" id="mform"><input id="mq" placeholder="Ask Mochi anything…" aria-label="Your question" autocomplete="off" maxlength="120" /><button class="x-btn">Send</button></form>
         </section>
         <div class="x-ov" id="ov"><div class="x-modal" id="modal"></div></div>
-        <section class="x-start lp" id="start" aria-label="Squishy Kingdom welcome">
-          <header class="lp-nav">
-            <a class="lp-logo" href="#lp-story" aria-label="Squishy Kingdom home"><img src="assets/kingdom-mark.svg" alt="" width="38" height="38">Squishy Kingdom</a>
-            <nav class="lp-nav-links" aria-label="Main navigation"><a href="#lp-story">The world</a><a href="#lp-features">Little joys</a><a href="#lp-play">Play together</a></nav>
-            <button class="lp-action" data-lp-launch>Let's play <span aria-hidden="true">↗</span></button>
-            <button class="lp-menu-trigger" id="lp-menu-open" aria-label="Open navigation menu" aria-haspopup="dialog" aria-controls="lp-menu"><span></span><span></span></button>
-          </header>
-          <div class="lp-story" id="lp-story">
-            <div class="lp-visual" id="lp-visual">
-              <div class="lp-poster" aria-hidden="true"></div>
-              <canvas id="landing-3d" role="img" aria-label="A miniature plush kingdom: a bunny arrives, discovers the village, and meets friends"></canvas>
-              <p class="lp-chapter-label" id="lp-chapter-label">A softer place to land</p>
-              <div class="lp-scene-copy" id="lp-opening">
-                <p class="lp-eyebrow" data-lp="eyebrow">A cozy little multiplayer world</p>
-                <h1><span data-lp="hero.heading">Small world.</span><br><em data-lp="hero.accent">Big soft spot.</em></h1>
-                <p class="lp-copy-body" data-lp="hero.body">Collect little wonders. Find your people. Leave a little room for play.</p>
-                <button class="x-btn lp-action" id="go">Enter the kingdom</button>
-              </div>
-              <div class="lp-scene-copy" id="lp-discover" hidden>
-                <p class="lp-eyebrow" data-lp="chapters.1.label">Little things. Lovely discoveries.</p>
-                <h2 data-lp="chapters.1.heading">Find your kind<br>of squishy.</h2>
-                <p class="lp-copy-body" data-lp="chapters.1.body">Open a box, meet a new favorite, and grow a collection that feels like you. Every squeeze has a little spring in it.</p>
-                <button class="lp-text-link" id="lp-squish-demo">Try a little squish ↗</button>
-              </div>
-              <div class="lp-scene-copy" id="lp-together" hidden>
-                <p class="lp-eyebrow" data-lp="chapters.2.label">Better with a little company</p>
-                <h2 data-lp="chapters.2.heading">Your happy place,<br>shared.</h2>
-                <p class="lp-copy-body" data-lp="chapters.2.body">Meet in a public room or send a private invite. Wander together, say hello, and make a little space for each other.</p>
-                <button class="lp-action" data-lp-launch>Find your people <span class="lp-arrow" aria-hidden="true">↗</span></button>
-              </div>
-              <div class="lp-story-bottom"><a class="lp-scroll-cue" href="#lp-features"><span aria-hidden="true"></span>Scroll to wander</a><div class="lp-progress" aria-label="Story progress"><span id="lp-current">01</span><i class="active"></i><i></i><i></i><span>03</span></div><a class="lp-skip" href="#lp-features">Skip the story ↓</a></div>
-            </div>
-          </div>
-          <section class="lp-intro" id="lp-features">
-            <div class="lp-section-lead"><div><p class="lp-kicker">A little less hurry. A little more happy.</p><h2 class="lp-title">Room for the things<br>that make you <em>smile.</em></h2></div><p>Some days call for a big adventure. Others, a quiet corner and a new favorite squishy. There's space for both here.</p></div>
-            <div class="lp-feature-grid" id="lp-feature-grid">
-              <article class="lp-feature"><small>01</small><h3>Soft by nature.</h3><p>Plush characters, springy steps, and a satisfying little squish. Hold Space, or use the Squish me button.</p></article>
-              <article class="lp-feature"><small>02</small><h3>A world to wander.</h3><p>Follow the paths through the village, visit the shops, and explore the gardens, woods, and shore.</p></article>
-              <article class="lp-feature"><small>03</small><h3>A room for your people.</h3><p>Join a public world or create an invite-only room. Your friends can see your avatar move and squish in real time.</p></article>
-            </div>
-          </section>
-          <section class="lp-play" id="lp-play">
-            <div><p class="lp-kicker" data-lp="closing.eyebrow">There is a little wonder waiting for you</p><h2 class="lp-title" data-lp="closing.heading">Make yourself<br>a little happier.</h2><p class="lp-copy-body" data-lp="closing.body">Your next cozy adventure is one small click away.</p><button class="lp-action" data-lp-launch>Begin your adventure <span class="lp-arrow" aria-hidden="true">↗</span></button></div>
-            <div class="lp-mode-list" aria-label="Ways to play"><button class="lp-mode" data-lp-mode="pub"><span aria-hidden="true">◎</span><span><strong>A world of new friends</strong><small>Join a public room</small></span><span class="lp-mode-arrow" aria-hidden="true">↗</span></button><button class="lp-mode" data-lp-mode="priv"><span aria-hidden="true">⌂</span><span><strong>Just your favorite people</strong><small>Create a friends room</small></span><span class="lp-mode-arrow" aria-hidden="true">↗</span></button><button class="lp-mode" data-lp-mode="solo"><span aria-hidden="true">✧</span><span><strong>A moment to yourself</strong><small>Take a solo adventure</small></span><span class="lp-mode-arrow" aria-hidden="true">↗</span></button></div>
-          </section>
-          <section class="lp-faq" id="lp-faq"><div><p class="lp-kicker">A few little answers</p><h2 class="lp-title">Before you<br><em>settle in.</em></h2></div><div id="lp-faq-list"><details><summary>Do I need to download anything?</summary><p>No app installation is needed. Open the game in a browser and choose a public room, a friends room, or a solo adventure.</p></details><details><summary>Can I play with friends?</summary><p>Yes. Create a friends room and share its invite link or room code. Live movement, avatars, squishing, and room chat are shared.</p></details><details><summary>How is my progress saved?</summary><p>Your collection and coins are saved in this browser. Keep a copy of your save code to move progress to another device. Accounts and cloud saves are not available yet.</p></details><details><summary>What can I do in the kingdom?</summary><p>Collect squishies, explore the 3D world, visit NPC traders, follow quests, and play tower and battle minigames. Those minigames use their existing views; collections and progression run locally.</p></details></div></section>
-          <footer class="lp-footer"><a class="lp-logo" href="#lp-story"><img src="assets/kingdom-mark.svg" alt="" width="29" height="29">Squishy Kingdom</a><p>A little world of wonder. Made for a little joy.</p><button id="sload">Load your adventure</button><button id="shelp">How to play</button></footer>
-          <button id="gopriv" hidden>Play with friends</button>
-          <dialog class="lp-menu" id="lp-menu" aria-label="Main navigation"><div class="lp-menu-header"><a class="lp-logo" href="#lp-story"><img src="assets/kingdom-mark.svg" alt="" width="32" height="32">Squishy Kingdom</a><button aria-label="Close menu">×</button></div><nav><a href="#lp-story">The world</a><a href="#lp-features">Little joys</a><a href="#lp-play">Play together</a><a href="#lp-faq">A few answers</a></nav><button class="lp-action" data-lp-launch>Let's play ↗</button></dialog>
+        <section class="x-start" id="start" aria-label="Start">
+          <div class="kingdom-brand start-brand"><div><strong>Squishy Kingdom</strong><small>A LITTLE WORLD OF WONDER</small></div></div>
+          <p class="start-eyebrow">Your next cozy adventure</p>
+          <h1>Squishy<br><span>Kingdom.</span></h1>
+          <p class="x-sub">Find your favorite squishies. Make a few friends.<br>Build a little world that feels like you.</p>
+          <button class="x-btn x-enter" id="go">Enter the kingdom</button>
+          <div class="x-row x-srvs"><button class="x-btn ghost" onclick="goSrv('pub')">Explore together</button><button class="x-btn ghost" id="gopriv" onclick="goSrv('priv')">Play with friends</button><button class="x-btn ghost" onclick="goSrv('solo')">A quiet adventure · Play solo</button></div>
+          <div class="start-links"><button class="x-btn ghost" id="sload">Load adventure</button><button class="x-btn ghost" id="shelp">How to play</button></div>
+          <p class="start-footer">Collect a little joy. Stay awhile.</p>
+          <p class="start-caption">Welcome to your happy place.<small>The kingdom awaits</small></p>
         </section>
         <section class="x-asmr" id="asmr" aria-label="ASMR Tower" hidden>
           <div class="x-ahud">
@@ -4286,6 +4246,5 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
     </script>
     <script src="premium.js"></script>
     <script src="scene3d.js"></script>
-    <script src="landing.js"></script>
   </body>
 </html>
