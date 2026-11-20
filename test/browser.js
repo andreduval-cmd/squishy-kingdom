@@ -4,14 +4,17 @@ import { createGameServer } from '../server/index.js';
 const game = createGameServer();
 await new Promise(resolve => game.server.listen(0, '127.0.0.1', resolve));
 const base = process.env.TEST_BASE_URL || `http://127.0.0.1:${game.server.address().port}`;
-const browser = await chromium.launch({ headless: true, channel: process.env.BROWSER_CHANNEL || undefined, args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist'] });
+const browser = await chromium.launch({ headless: true, channel: process.env.BROWSER_CHANNEL || undefined, args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--enable-webgl','--ignore-gpu-blocklist'] });
 const errors = [];
+let pages=[];
 try {
   const contexts = await Promise.all([0, 1].map(() => browser.newContext({ viewport: { width: 1280, height: 900 } })));
-  for (const context of contexts) await context.addInitScript(() => { localStorage.sqTut = '1'; });
+  for (const context of contexts) { context.setDefaultTimeout(45000); await context.addInitScript(() => { localStorage.sqTut = '1'; }); }
   const a = await contexts[0].newPage(), b = await contexts[1].newPage();
+  pages=[a,b];
   for (const page of [a, b]) {
-    page.on('pageerror', error => errors.push(error.message));
+    page.on('pageerror', error => { errors.push(error.message); console.error('Browser error:',error.message); });
+    page.on('console', message => { if(message.type()==='warning' && message.text().includes('3D renderer unavailable')) console.warn(message.text()); });
     await page.goto(base); await page.waitForFunction(() => typeof ONLINE !== 'undefined');
     if (page === a) {
       await page.screenshot({ path: 'test-results/title-desktop.png', fullPage: true });
@@ -29,7 +32,10 @@ try {
   await b.locator('#online-name').fill('Bob'); await b.evaluate(code => enter('priv',code),initialRoom);
   await a.waitForFunction(() => LB.p.some(p => p.label === 'Bob'));
   await b.waitForFunction(() => LB.p.some(p => p.label === 'Alice'));
-  for(const page of [a,b]) await page.waitForFunction(() => window.Squishy3D?.ready && Squishy3D.diagnostics.frame > 2);
+  console.log('Room connected; initializing 3D rendering.');
+  for(const page of [a,b]) { await page.bringToFront(); await page.waitForFunction(() => window.Squishy3D?.ready && Squishy3D.diagnostics.frame > 2); }
+  await a.bringToFront();
+  console.log('3D rendering ready in both browsers.');
   const projection = await a.evaluate(() => { const point=Squishy3D.project(WS.p.x,WS.p.y);const back=Squishy3D.unproject(point.x,point.y);return Math.hypot(back.x-WS.p.x,back.y-WS.p.y); });
   assert.ok(projection < .01, '3D ground hit testing matches world coordinates');
   const zoom = await a.evaluate(() => Squishy3D.diagnostics.zoom);
@@ -75,12 +81,16 @@ try {
   await b.waitForFunction(() => ONLINE.connected && LB.p.length === 1);
   await a.waitForFunction(() => LB.p.length === 1);
   // Mobile layout and save reload.
+  await b.bringToFront();
   await b.setViewportSize({ width: 390, height: 844 });
   await b.screenshot({ path: 'test-results/mobile.png', fullPage: true });
   assert.equal(await b.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-  await a.screenshot({ path: 'test-results/multiplayer.png', fullPage: true });
+  await a.bringToFront(); await a.screenshot({ path: 'test-results/multiplayer.png', fullPage: true });
   await a.reload(); await a.waitForFunction(() => typeof ONLINE !== 'undefined');
   assert.ok((await a.locator('#go').textContent()).includes('Continue'));
   assert.deepEqual(errors, []);
   console.log('PASS: independent browsers: 3D rendering, soft squish synchronization, collision/doors, presence, movement, avatars, scenes, safe chat, reconnect, solo, invites, mobile, save reload.');
+} catch(error) {
+  for(let i=0;i<pages.length;i++) { try { await pages[i].screenshot({path:`test-results/failure-${i}.png`,timeout:10000}); } catch {} }
+  throw error;
 } finally { await browser.close(); await game.close(); }
